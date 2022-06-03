@@ -1,35 +1,44 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 public abstract class Action
 {
-	public abstract Transform Target { get; set; }
+	/*
+	public HashSet<KeyValuePair<Enum, object>> Preconditions;
+	public HashSet<KeyValuePair<Enum, object>> Effects;
+	*/
 	
-	//target hoga ek
-	//target distance
-	
-	public abstract bool Perform();
+	public Transform Target { get; set; }
+
+	public abstract void Perform();
 	
 	protected static void print(object message) => Debug.Log(message);
 }
 
+public class ScaleDownAction : Action
+{
+	public override void Perform()
+	{
+		print("scaled down");
+	}
+}
+
 public class BlueAction : Action
 {
-	public override Transform Target { get; set; }
-
-	public override bool Perform()
+	//if you have to go to blue target, you have to be short, but short also makes you fat
+	//pre condition
+	public override void Perform()
 	{
 		print("Blue");
-		return false;
 	}
 }
 
 public class GreenAction : Action
 {
-	public override Transform Target { get; set; }
-
-	public override bool Perform()
+	//if you want to go to green target, you have to be slim, but slim also makes you tall
+	public override void Perform()
 	{
 		print("Green");
-		return false;
 	}
 }
