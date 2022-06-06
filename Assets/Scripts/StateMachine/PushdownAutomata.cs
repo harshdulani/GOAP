@@ -26,7 +26,8 @@ public class PushdownAutomata : MonoBehaviour
 
 	private static bool HasTappedOverUi()
 	{
-		if (EventSystem.current) return EventSystem.current.IsPointerOverGameObject(-1);
+		if (EventSystem.current) 
+			return EventSystem.current.IsPointerOverGameObject(-1);
 		
 		print("no event system"); return false;
 	}

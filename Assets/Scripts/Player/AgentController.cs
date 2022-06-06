@@ -38,17 +38,22 @@ public class AgentController : MonoBehaviour
 		//don't make it perform action, tell the controller that one state has been popped from pushdown automata,
 		//so it will also pop it from action plan stack
 		_currentAction.Perform();
-		SetCanvasStatus(true);
 	}
 
 	private void CreateActionPlan()
 	{
 		if(_currentAction == null) return;
+
+		var targetPosition = _currentAction.Target.position;
+		targetPosition.y = _transform.position.y;
 		
-		if(Vector3.Distance(_currentAction.Target.position, _transform.position) > 0.01f)
-			PushdownAutomata.CreateMoveState(this, _currentAction.Target.position);
+		if(Vector3.Distance(targetPosition, _transform.position) > 0.01f)
+			PushdownAutomata.CreateMoveState(this, targetPosition);
 		else
+		{
 			PerformAction();
+			SetCanvasStatus(true);
+		}
 	}
 
 	public void MakeAgentAverageLooking()
@@ -77,7 +82,7 @@ public class AgentController : MonoBehaviour
 		Movement.SetAgentRadius(0.25f);
 	}
 
-	private void SetCanvasStatus(bool newStatus) => blueButton.interactable = greenButton.interactable = scaleDownButton.interactable = newStatus;
+	public void SetCanvasStatus(bool newStatus) => blueButton.interactable = greenButton.interactable = scaleDownButton.interactable = newStatus;
 
 	public void PerformBlueAction()
 	{

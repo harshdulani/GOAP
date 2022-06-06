@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class ScaleDown : MonoBehaviour
 {
+	public GameObject gateDoor;
+
 	/*
 	 public void GetScaledDown(AgentController agent)
 	{
@@ -21,5 +23,6 @@ public class ScaleDown : MonoBehaviour
 		agent.state.myHeight = Height.Short;
 		
 		agent.MakeAgentShortAndFat(); 
+		gateDoor.SetActive(false);
 	}
 }
