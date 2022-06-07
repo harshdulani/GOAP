@@ -1,16 +1,20 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class AgentController : MonoBehaviour
 {
 	public AgentState state;
 	
-	[SerializeField] private Transform blueTarget, greenTarget, scaleDownTarget;
-	[SerializeField] private Button blueButton, greenButton, scaleDownButton;
-
+	[SerializeField] private Transform blueTarget, greenTarget, scaleDownTarget, scaleUpTarget;
+	[SerializeField] private Button blueButton, greenButton, scaleDownButton, scaleUpButton;
+	
+	private Stack<Action> _currentActionPlan;
+	
 	private static BlueAction _blueAction;
 	private static GreenAction _greenAction;
 	private static ScaleDownAction _scaleDownAction;
+	private static ScaleUpAction _scaleUpAction;
 	private Action _currentAction;
 
 	private Transform _transform, _mesh;
@@ -26,9 +30,12 @@ public class AgentController : MonoBehaviour
 		_transform = transform;
 		_mesh = _transform.GetChild(0);
 
+		_currentActionPlan = new Stack<Action>();
+		
 		_blueAction = new BlueAction {Target = blueTarget};
 		_greenAction = new GreenAction {Target = greenTarget};
 		_scaleDownAction = new ScaleDownAction{Target = scaleDownTarget};
+		_scaleUpAction = new ScaleUpAction{Target = scaleUpTarget};
 		
 		state = new AgentState { myHeight = Height.Average, myFatness = Fatness.Average};
 	}
@@ -37,7 +44,7 @@ public class AgentController : MonoBehaviour
 	{
 		//don't make it perform action, tell the controller that one state has been popped from pushdown automata,
 		//so it will also pop it from action plan stack
-		_currentAction.Perform();
+		_currentAction.Perform(this);
 	}
 
 	private void CreateActionPlan()
@@ -82,7 +89,7 @@ public class AgentController : MonoBehaviour
 		Movement.SetAgentRadius(0.25f);
 	}
 
-	public void SetCanvasStatus(bool newStatus) => blueButton.interactable = greenButton.interactable = scaleDownButton.interactable = newStatus;
+	public void SetCanvasStatus(bool newStatus) => blueButton.interactable = greenButton.interactable = scaleDownButton.interactable = scaleUpButton.interactable = newStatus;
 
 	public void PerformBlueAction()
 	{
@@ -107,6 +114,15 @@ public class AgentController : MonoBehaviour
 		print("scale Down Begin");
 
 		_currentAction = _scaleDownAction;
+		CreateActionPlan();
+		SetCanvasStatus(false);
+	}
+
+	public void PerformScaleUpAction()
+	{
+		print("scale up Begin");
+
+		_currentAction = _scaleUpAction;
 		CreateActionPlan();
 		SetCanvasStatus(false);
 	}
